@@ -1,34 +1,83 @@
-# 📂 Proyecto de Automatizacion Urban Grocers
+# 🛒 Automatización de Pruebas de API para Urban Grocers
 
 ---
 
-## 🌟 Descripcion del proyecto
+## 📝 Descripción del Proyecto
 
-Automatización de pruebas de caja negra a nivel de API para verificar los requisitos funcionales y de límites del campo name en el endpoint de creación de kits de productos (Main.Kits). El proyecto incluyó la gestión del ciclo de autenticación y la validación de respuestas JSON/códigos HTTP.
+Este proyecto contiene un conjunto de **pruebas automatizadas de caja negra** desarrolladas en Python para validar el *backend* de la aplicación **Urban Grocers**.
 
-Este proyecto implementa pruebas automatizadas para la API de creación de kits (POST api/v1/kits). Dado que la creación de un kit requiere autenticación, el flujo de prueba comienza con la creación de un usuario (POST /api/v1/users) para obtener el AuthToken necesario, el cual se utiliza para autorizar la solicitud de creación del kit. 
+El objetivo principal es verificar los requisitos funcionales y los límites (pruebas de límite y frontera) del campo `name` en el *endpoint* de creación de kits de productos (`POST /api/v1/kits`).
 
-La estructura del proyecto se basa en el framework requests de Python, separando la configuración (configuration.py), los datos de prueba (data.py), el envío de solicitudes (sender_stand_request.py) y la lógica de prueba y aserciones (create_kit_name_kit_test.py) para una mejor mantenibilidad y claridad. Las pruebas se centran en la validación funcional del campo name del kit
+### Flujo de Pruebas
 
-Se han creado varias listas de comprobación, haciendo varias pruebas en del campo name en la solicitud de creación de un kit de productos.
-Las pruebas estan automatizadas y escritas basadas en la lista de comprobación proporcionada para el proyecto. Para consultar mas detalles adicionales o consultar la lista de comprobacion usada para el proyecto se puede consultar el archivo "Descripcion.pdf", incluido en la carpeta raiz del proyecto.
- 
+Dado que la creación de un kit requiere autenticación, el flujo de prueba automatizado se ejecuta en dos pasos clave:
 
----
-## 🛠 Estructura del proyecto
-
-El proyecto esta compuesto de la siguiente estructura:
-* `"configuration.py"`:  Almacena las variables de configuración clave del proyecto. Define la URL base del servicio (URL_SERVICE) y las rutas específicas para los endpoints de la API (CREATE_USER_PATH, CREATE_KITS_PATH).
-* `"data.py"`: Contiene todos los datos de prueba (fixtures) y los encabezados (headers) necesarios para las solicitudes a la API. Incluye los cuerpos de solicitud para la creación de usuarios (user_body) y los nueve cuerpos de prueba para validar el campo name del kit (kit_body_test1 a kit_body_test9).
-* `"sender_stand_request.py"`: Actúa como el módulo de envío de solicitudes (API client). Contiene funciones que realizan las peticiones HTTP (POST) a los endpoints, específicamente para crear un usuario (post_new_user) y crear un kit (post_new_client_kit).
-* `"create_kit_name_kit_test.py"`: Es el archivo principal de las pruebas. Contiene la lógica para la autenticación (crear usuario y obtener authToken) y las funciones de aserción (positive_assert, negative_assert). Incluye la lista de 9 funciones de prueba que validan el campo name del kit.
-* `"README.md"`: Este archivo.
+1.  **Autenticación**: Se realiza la creación de un nuevo usuario (`POST /api/v1/users`) para obtener el **AuthToken** necesario.
+2.  **Creación de Kits**: Se utiliza el **AuthToken** para autorizar y ejecutar las 9 pruebas de validación sobre el campo `name` al intentar crear un kit.
 
 ---
 
-## 🛠 Tecnologías y técnicas utilizadas.
+## 🛠️ Tecnologías y Técnicas
 
-Para la elaboracion de las pruebas Automatizadas se utilizó el lenguaje de programación Python. El framework de pruebas pytest. Y 
-la librearia response para manejar las solicitudes que interactuan con las APIs. 
+| Categoría | Tecnología/Técnica | Descripción                                                                                                                        |
+| :--- | :--- |:-----------------------------------------------------------------------------------------------------------------------------------|
+| **Lenguaje de Programación** | **Python** | Lenguaje principal utilizado para el desarrollo de las pruebas.                                                                    |
+| **Framework de Pruebas** | **Pytest** | Utilizado para la estructura, detección y ejecución de los casos de prueba.                                                        |
+| **Librería HTTP** | **Requests** | Implementa todas las solicitudes HTTP (`POST`) que interactúan con la API del servicio.                                            |
+| **Patrón de Diseño** | **Separación de Capas** | El código está dividido en módulos para mejorar la legibilidad y la mantenibilidad (datos, configuración, cliente API, y pruebas). |
 
-Se utilizo el sistema de control de versiones Git y se utilizo la plataforma web GitHub para alojar el proyecto.
+---
+
+## 🏗️ Estructura y Función de los Archivos
+
+El proyecto sigue una estructura modular para mantener la configuración, los datos y la lógica de las solicitudes separados de los casos de prueba, lo que facilita su mantenimiento.
+
+| Archivo | Función Principal | Contenido Clave                                                                                                                                                                                                                     |
+| :--- | :--- |:------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------|
+| `configuration.py` | **Configuración del Entorno** | Almacena la URL base del servicio (`URL_SERVICE`) y las rutas específicas de los *endpoints* (`CREATE_USER_PATH`, `CREATE_KITS_PATH`).                                                                                              |
+| `data.py` | **Datos de Prueba** | Contiene todos los datos fijos, encabezados (`headers`) y, más importante, los **9 cuerpos de solicitud** (`kit_body_test1` a `kit_body_test9`) utilizados para validar el campo `name`.                                            |
+| `sender_stand_request.py` | **Cliente API** | Funciona como la capa de abstracción para el envío de solicitudes. [cite_start]Contiene las funciones `post_new_user` y `post_new_client_kit` que construyen y envían las peticiones HTTP `POST`.                                   |
+| `create_kit_name_kit_test.py` | **Lógica de Pruebas** | Contiene la lógica de autenticación (creación de usuario y obtención de *AuthToken*), las funciones de aserción (`positive_assert`, `negative_assert`) y las **9 funciones de prueba** que validan los requisitos del campo `name`. |
+
+---
+
+## 📝 Lista de Comprobación de Pruebas (Campo "name")
+
+Las pruebas automatizadas se basan en la siguiente lista de comprobación proporcionada, cubriendo casos límite y casos de prueba funcionales (pruebas positivas y negativas).
+
+| No. | Descripción de la Prueba | Código HTTP Esperado |
+| :-- | :--- | :--- |
+| 1 | Número permitido de caracteres (1) | 201 |
+| 2 | Número permitido de caracteres (511) | 201 |
+| 3 | Menos caracteres que el mínimo permitido (0) | 400 |
+| 4 | Más caracteres que el máximo permitido (512) | 400 |
+| 5 | Se permiten caracteres especiales (Ej: `№%@`) | 201 |
+| 6 | Se permiten espacios | 201 |
+| 7 | Se permiten números | 201 |
+| 8 | El parámetro `name` no se pasa en la solicitud | 400 |
+| 9 | Tipo de parámetro diferente (Ej: número en lugar de string) | 400 |
+
+---
+
+## 🚀 Ejecución de las Pruebas
+
+Sigue estos pasos para configurar y ejecutar las pruebas en tu entorno local:
+
+### 1. Requisitos Previos
+
+Asegúrate de tener instalado **Python** en tu sistema.
+
+### 2. Instalación de Dependencias
+
+Necesitarás instalar las librerías `requests` y `pytest`. Abre tu terminal o símbolo del sistema y ejecuta:
+
+```bash
+pip install requests pytest
+```
+
+### 3. Ejecutar las Pruebas
+
+Para ejecutar el conjunto completo de pruebas, navega hasta el directorio que contiene los archivos en tu terminal y utiliza el comando `pytest`:
+
+```bash
+pytest
